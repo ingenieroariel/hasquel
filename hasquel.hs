@@ -1,5 +1,4 @@
 import Control.Monad (forever, when)
-import qualified Data.List.Split as S
 import System.IO (isEOF)
 import System.Exit (exitSuccess)
 
@@ -25,7 +24,6 @@ import System.Exit (exitSuccess)
 -- dem               : digital elevation model, srtm3 or gtopo30, average elevation of 3''x3'' (ca 90mx90m) or 30''x30'' (ca 900mx900m) area in meters, integer. srtm processed by cgiar/ciat.
 -- timezone          : the iana timezone id (see file timeZone.txt) varchar(40)
 -- modification date : date of last modification in yyyy-MM-dd format
-
 
 
 data Place = Place { geonameid :: Int
@@ -54,17 +52,31 @@ data Place = Place { geonameid :: Int
 --
 -- $setup
 -- >>> let inputStr = "2130833\tMcArthur Reef\tMcArthur Reef\t\t52.06667\t177.86667\tU\tRFU\tUS\tAK\t016\t\t\t0-9999\tAsia/Kamchatka\t2016-07-05"
-
+--
 -- Examples:
 -- >>> makePlace inputStr
 -- Place {geonameid = 2130833, name = "McArthur Reef", asciiname = "McArthur Reef", alternate = "", latitude = 52.06667, longitude = 177.86667, featureClass = "U", featureCode = "RFU", countryCode = "US", cc2 = "", admin1 = "AK", admin2 = "016", admin3 = "", admin4 = "", population = 0, elevation = "", dem = -9999, timezone = "Asia/Kamchatka", lastModified = "2016-07-05"} 
+--
 -- FIXME: This code has way too much repetition, could it be possible to annotate the fields on the Place definition with their order in the csv line and use it's type definition to not repeat any variable name below?
 makePlace :: String -> Place
 makePlace line = do
-    let yy = S.splitOn "\t" line
-    let [geonameid, name, asciiname, alternate, latitude, longitude, featureClass, featureCode, countryCode, cc2, admin1, admin2, admin3, admin4, population, elevation, dem, timezone, lastModified]  = yy
+    let [geonameid, name, asciiname, alternate, latitude, longitude, featureClass, featureCode, countryCode, cc2, admin1, admin2, admin3, admin4, population, elevation, dem, timezone, lastModified]  = split line
     let p = Place (read geonameid :: Int) name asciiname alternate (read latitude :: Double) (read longitude :: Double) featureClass featureCode countryCode cc2 admin1 admin2 admin3 admin4 (read population :: Int) elevation (read dem :: Int) timezone lastModified
-    p   
+    p
+
+
+-- | Split lines on tab characters
+-- Examples:
+-- >>> split "hola\t\mundo"
+-- ("hola", "mundo")
+-- 
+split :: String -> [String]
+split [] = [""]
+split (c:cs)
+   | c == '\t' = "": rest
+   | otherwise = (c: head rest) : tail rest
+  where
+    rest = split cs
 
 
 main = parsero
