@@ -1,10 +1,7 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
-import qualified Control.Monad as CM
+import Control.Monad (forever, when)
 import qualified Data.List.Split as S
-import qualified Data.List as DL
-import qualified Pipes
 import System.IO (isEOF)
+import System.Exit (exitSuccess)
 
 -- This is reading a GeoNames file, here is what is expected:
 -- The main 'geoname' table has the following fields :
@@ -70,14 +67,12 @@ makePlace line = do
     p   
 
 
-parsero :: Pipes.Producer String IO ()
-parsero = do
-    eof <- Pipes.lift isEOF
-    CM.unless eof $ do
-        str <- Pipes.lift getLine
-        let p = makePlace(str)
-        Pipes.yield (show p)
-        parsero
+main = parsero
 
-
-main = Pipes.runEffect $ Pipes.for parsero (Pipes.lift . putStrLn)
+parsero = forever $ do
+    done <- isEOF
+    when done $  exitSuccess
+    z <- getLine
+    let p = makePlace z
+    putStrLn (show p)
+    parsero

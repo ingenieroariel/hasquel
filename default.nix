@@ -6,7 +6,6 @@ let
   haskellDeps = ps: with ps; [
     base
     split
-    pipes
     doctest
   ];
 
