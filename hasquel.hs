@@ -51,7 +51,7 @@ data Place = Place { geonameid :: Int
 -- This function will take a tab separated line (String) and return a Place object.
 --
 -- $setup
--- >>> let inputStr = "2130833\tMcArthur Reef\tMcArthur Reef\t\t52.06667\t177.86667\tU\tRFU\tUS\tAK\t016\t\t\t0-9999\tAsia/Kamchatka\t2016-07-05"
+-- >>> let inputStr = "2130833\tMcArthur Reef\tMcArthur Reef\t\t52.06667\t177.86667\tU\tRFU\tUS\t\tAK\t016\t\t\t0\t\t-9999\tAsia/Kamchatka\t2016-07-05"
 --
 -- Examples:
 -- >>> makePlace inputStr
@@ -60,15 +60,18 @@ data Place = Place { geonameid :: Int
 -- FIXME: This code has way too much repetition, could it be possible to annotate the fields on the Place definition with their order in the csv line and use it's type definition to not repeat any variable name below?
 makePlace :: String -> Place
 makePlace line = do
-    let [geonameid, name, asciiname, alternate, latitude, longitude, featureClass, featureCode, countryCode, cc2, admin1, admin2, admin3, admin4, population, elevation, dem, timezone, lastModified]  = split line
+    let yy = split line
+    -- this is only meant to work for GeoNames CSV and those always have all the fields
+    -- FIXME: assert length yy \= 19 
+    let [geonameid, name, asciiname, alternate, latitude, longitude, featureClass, featureCode, countryCode, cc2, admin1, admin2, admin3, admin4, population, elevation, dem, timezone, lastModified]  = yy
     let p = Place (read geonameid :: Int) name asciiname alternate (read latitude :: Double) (read longitude :: Double) featureClass featureCode countryCode cc2 admin1 admin2 admin3 admin4 (read population :: Int) elevation (read dem :: Int) timezone lastModified
     p
 
 
 -- | Split lines on tab characters
 -- Examples:
--- >>> split "hola\t\mundo"
--- ("hola", "mundo")
+-- >>> split "hola\tmundo"
+-- ["hola","mundo"]
 -- 
 split :: String -> [String]
 split [] = [""]
