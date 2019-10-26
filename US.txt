@@ -1,0 +1,10 @@
+2130833	McArthur Reef	McArthur Reef		52.06667	177.86667	U	RFU	US		AK	016			0		-9999	Asia/Kamchatka	2016-07-05
+3577483	The Narrows	The Narrows	The Narrows	18.37502	-64.72517	H	CHN	US	VG	00				0		-9999	America/St_Thomas	2018-11-06
+3831601	Nantucket Shoals	Nantucket Shoals		41.06917	-69.67983	U	SHSU	US		MA				0		-9999		2019-03-18
+3831610	Little Stellwagen Basin	Little Stellwagen Basin		42.11667	-70.28333	U	BSNU	US		00				0		-9999	America/New_York	2017-05-26
+3831661	Cashes Ledge	Cashes Ledge	Cash Ledge,Cashe Ledge	42.91328	-68.9538	U	RDGU	US						0		-9999		2019-02-11
+3831676	Ammen Rock	Ammen Rock		42.89129	-68.94357	U	RFU	US						0		-9999		2019-02-11
+3981608	Tia Juana River	Tia Juana River	Rio Tiajuana,Rio Tijuana,Río Tijuana,Tia Juana River	32.55668	-117.12865	H	STM	US						0		4	America/Los_Angeles	2011-10-20
+4020151	Southern California Borderland	Southern California Borderland		32.5	-118.5	U	BDLU	US		CA				0		-9999	America/Cambridge_Bay	2016-02-08
+4020248	Monterey Canyon	Monterey Canyon	Kan'on Monterej,Kan'on Monterey,Kan’on Monterey,Monterey Deep-Sea Channel,Monterey Gorge,Monterey Seavalley,Monterey Submarine Canyon,Monterey Trough,Каньон Монтерей	36.66667	-122.08333	U	CNYU	US		CA				0		-9999	America/Cambridge_Bay	2014-02-20
+4030396	Heceta Bank	Heceta Bank		44.12062	-124.8761	U	BNKU	US		OR				0		-9999		2016-11-18
