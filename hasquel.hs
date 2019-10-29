@@ -1,6 +1,8 @@
 import Control.Monad (forever, when)
 import System.IO (isEOF)
 import System.Exit (exitSuccess)
+import Data.Matrix (Matrix, fromList, zero)
+import System.Environment (getArgs)
 
 -- This is reading a GeoNames file, here is what is expected:
 -- The main 'geoname' table has the following fields :
@@ -26,7 +28,7 @@ import System.Exit (exitSuccess)
 -- modification date : date of last modification in yyyy-MM-dd format
 
 
-data Place = Place { geonameid :: Int
+data Place = Place { geonameid :: Double
   , name :: String
   , asciiname :: String
   , alternate :: String
@@ -40,9 +42,9 @@ data Place = Place { geonameid :: Int
   , admin2 :: String
   , admin3 :: String
   , admin4 :: String
-  , population :: Int
+  , population :: Double
   , elevation :: String
-  , dem :: Int
+  , dem :: Double
   , timezone :: String
   , lastModified :: String
   } deriving (Show)
@@ -64,7 +66,7 @@ makePlace line = do
     -- this is only meant to work for GeoNames CSV and those always have all the fields
     -- FIXME: assert length yy \= 19 
     let [geonameid, name, asciiname, alternate, latitude, longitude, featureClass, featureCode, countryCode, cc2, admin1, admin2, admin3, admin4, population, elevation, dem, timezone, lastModified]  = yy
-    let p = Place (read geonameid :: Int) name asciiname alternate (read latitude :: Double) (read longitude :: Double) featureClass featureCode countryCode cc2 admin1 admin2 admin3 admin4 (read population :: Int) elevation (read dem :: Int) timezone lastModified
+    let p = Place (read geonameid :: Double) name asciiname alternate (read latitude :: Double) (read longitude :: Double) featureClass featureCode countryCode cc2 admin1 admin2 admin3 admin4 (read population :: Double) elevation (read dem :: Double) timezone lastModified
     p
 
 
@@ -82,12 +84,41 @@ split (c:cs)
     rest = split cs
 
 
+-- geonameid, latitude, longitude, dem
+makeMatrix :: Place -> Double -> Matrix Double
+makeMatrix p d = fromList 1 6 [geonameid p, latitude p, longitude p, population p, dem p, d]
+
+
+-- dumb distance calculation, not taking geoid into account.
+distance (x1 , y1) (x2 , y2) = sqrt (x'*x' + y'*y')
+    where
+      x' = x1 - x2
+      y' = y1 - y2
+
+-- | main
+-- Cool
+main :: IO()
 main = parsero
+
+hola = "3"
 
 parsero = forever $ do
     done <- isEOF
-    when done $  exitSuccess
+    when done $  exitSuccess -- when done, finish happily :)
+
+    args <- getArgs
     z <- getLine
     let p = makePlace z
-    putStrLn (show p)
+
+    -- origin point for calculations
+    let [a, x, b, y] = args
+    let lat = (read x :: Double)
+    let lon = (read y :: Double)
+
+    -- check how far this point is to the target
+    let d = distance (lat, lon) ((latitude p, longitude p))
+
+    -- turn the data into a matrix, including distance
+    let m = makeMatrix p d
+    putStrLn (show m)
     parsero
