@@ -6,7 +6,6 @@ let
   haskellDeps = ps: with ps; [
     base
     doctest
-    matrix
   ];
 
   ghc = haskellPackages.ghcWithPackages haskellDeps;

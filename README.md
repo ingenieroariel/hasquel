@@ -4,7 +4,7 @@ It is intended to be used as Sample Haskell code for my interviews
 
 ## Development
 
-head US.txt | nix-shell --run "runhaskell hasquel.hs"
+nix-shell --run "runhaskell hasquel.hs US.txt"
 
 This repo contains a 10 records US.txt file, but the original file can be found at http://download.geonames.org/export/dump/US.zip (It is called US.txt)
 
@@ -20,4 +20,4 @@ This repo contains a 10 records US.txt file, but the original file can be found 
 
 This calculates distance from south richmod in queens to all other locations:
 
-`cat ../US_complete.txt | grep 'NY' | runhaskell hasquel.hs --x 40.693618 --y -73.821014`
+`runhaskell hasquel.hs US.txt --x 40.693618 --y -73.821014`
