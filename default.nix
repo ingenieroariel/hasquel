@@ -3,9 +3,24 @@ let
   inherit (nixpkgs) pkgs;
   inherit (pkgs) haskellPackages;
 
+  callHackageDirect = {pkg, ver, sha256}:
+    let pkgver = "${pkg}-${ver}";
+      in haskellPackages.callCabal2nix pkg (pkgs.fetchzip {
+           url = "mirror://hackage/${pkgver}/${pkgver}.tar.gz";
+           inherit sha256;
+         });
+
+  hmatrix = callHackageDirect {
+      pkg = "hmatrix";
+      ver = "0.20.0.0";
+      sha256 = "1xzlp4ls0szw6nfzp4j2jzfllryzrkd0hsfr9q6sns2m78g609gl";
+    } {};
+
   haskellDeps = ps: with ps; [
     base
     doctest
+    matrix
+    hmatrix
   ];
 
   ghc = haskellPackages.ghcWithPackages haskellDeps;

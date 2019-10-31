@@ -79,20 +79,29 @@ distance (x1 , y1) (x2 , y2) = sqrt (x'*x' + y'*y')
 distanceM :: [[Double]] -> (Double, Double) -> [Double]
 distanceM m (lat, lon) = [(distance (lat, lon) (x !! 1, x !! 2)) | x <- m] 
 
+-- annotate a matrix with distance to a point
 withDistanceTo :: [[Double]] -> (Double, Double) -> [[Double]]
-withDistanceTo m (lat, lon) = transpose ((transpose m) ++ [distanceM m (lat, lon)])
+withDistanceTo m (lat, lon) = transpose (m' ++ d')
+   where
+     m' = transpose m
+     d' = [distanceM m (lat, lon)]
+
 
 -- | main
 -- Cool
 main :: IO()
 main = do
-    [fileName,a,x,b,y] <- getArgs 
-    f <- readFile fileName
+    args <- getArgs 
+    -- FIXME: Assert len of args is 3, the expected order is:
+    -- 0           1     2    
+    -- fileName  <lat> <lon>
+    f <- readFile ( args !! 0)
     let m = parsePlaces (lines f)
 
     -- add distance column
-    let lat = read x :: Double
-    let lon = read y :: Double
+    let lat = read ( args !! 1) :: Double
+    let lon = read ( args !! 2) :: Double
+
     let md = withDistanceTo m (lat, lon)
     
     putStrLn (show md)
